@@ -57,3 +57,7 @@ examples/simple_bash.sh
 *.tar.gz
 *.tar.bz2
 config.xnee
+
+# make dist extraction directories
+xnee-*/
+Xnee-*.tar.gz
