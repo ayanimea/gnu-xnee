@@ -50,3 +50,4 @@ examples/simple_bash.sh
 # Distribution archives
 *.tar.gz
 *.tar.bz2
+config.xnee
