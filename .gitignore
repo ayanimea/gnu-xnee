@@ -35,6 +35,12 @@ stamp-h1
 cnee/src/cnee
 gnee/src/gnee
 pnee/src/pnee
+libxnee/test/libtest
+libxnee/test/testcallback
+libxnee/test/testdisplay
+libxnee/test/testfeedback
+libxnee/test/testprint
+libxnee/test/testsetget
 
 # Generated documentation
 cnee/src/cnee.1
