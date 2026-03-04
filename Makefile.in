@@ -163,8 +163,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/./autotools/missing ./autotools//compile \
 	./autotools//config.guess ./autotools//config.sub \
 	./autotools//install-sh ./autotools//ltmain.sh \
-	./autotools//missing AUTHORS COPYING ChangeLog INSTALL NEWS \
-	README TODO
+	./autotools//mdate-sh ./autotools//missing \
+	./autotools//texinfo.tex AUTHORS COPYING ChangeLog INSTALL \
+	NEWS README TODO
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)

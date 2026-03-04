@@ -39,9 +39,14 @@ jobs:
 
       - name: Build XNee
         run: |
-          make -f Makefile.cvs
+          make -f Makefile.cvs generate
           ./configure --disable-gui --disable-doc --disable-xinput2
           make
+
+      - name: Run e2e tests
+        run: |
+          chmod +x tests/e2e_cnee.sh
+          ./tests/e2e_cnee.sh ./cnee/src/cnee
 
       - name: Create source distribution
         run: make dist
