@@ -1,0 +1,289 @@
+\input texinfo  @c -*- Texinfo -*-
+@c %**start of header
+@setfilename cnee.info
+@set EDITION 3.20
+@set VERSION 3.20
+@settitle cnee Manual 
+@setchapternewpage off
+@c %**end o
+@ifinfo
+@node Top, Options,, (dir)
+@top 
+@end ifinfo
+  cnee (part of the xnee project) can record and replay an X session. cnee also has the ability to distribute events to multiple displays.
+
+Current version of xnee is 3.20
+@menu
+* Options::        Options
+* Examples::       Examples
+* Bugs::           Bugs
+* See also::       See also
+@end menu
+@contents
+
+Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007 Henrik Sandklef.
+@*
+@*
+This  is  free  software;  see the source for copying conditions. There is NO warranty;not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+@node Options, Examples, top, top 
+@code{--err-file,- e <file>}
+Redirect all Xnee verbose output file_name(default is stderr)
+
+@code{--out-file,- o <file>}
+Redirect all Xnee data to file_name(default is stdout)
+
+@code{--display,- d <displayname>}
+X server to contact (default is localhost)
+
+@code{--all-clients,- ac }
+Record all client's data (default)
+
+@code{--future-clients  }
+Record future client's data
+
+@code{--data-to-record,- dtr <n>}
+Intercept n numbers of data ( n<0 means forever)
+
+@code{--time,- t <secs>}
+Delay start of application for <secs> seconds. Can be used to prevent recording of KeyRelease when starting Xnee from terminal
+
+@code{--record,- rec }
+Set recording mode
+
+@code{--replay,- rep }
+Set replaying mode
+
+@code{--distribute,- di <LIST>}
+Distribute recorded or replayed events to LIST where LIST is comma separated list of displays
+
+@code{--future-clients,- fc }
+Record future client's data (default)
+
+@code{--plugin,- p <name}
+Use the plugin name
+
+@code{--verbose,- v }
+Enable verbose printout
+
+@code{--feedback-xosd,- fx }
+Use xosd to feedback
+
+@code{--feedback-stderr,- fs }
+Use stderr to feedback
+
+@code{--feedback-none,- fn }
+Dont' use feedback
+
+@code{--device-event-range,- devera <X_LIST>}
+Set device event range to X_LIST
+
+@code{--keep-autorepeat,- ka }
+Keep autorepeat during record/replay
+
+@code{--no-reparent-recording,- nrr }
+Prevent explicit recording of ReparentNotify event
+
+@code{--first-last  }
+Print only first and last of multiple successive MotionEvent
+
+@code{--all-events  }
+Intercept all events
+
+@code{--events-to-record,- etr <n>}
+Intercept n numbers of events ( n<0 means forever)
+
+@code{--seconds-to-record,- str <n>}
+Intercept for n seconds ( n<0 means forever)
+
+@code{--recorded-resolution  <res>}
+Resolution to use when recording is set to res
+
+@code{--human-printout,- hp }
+Prints human readable
+
+@code{--store-mouse-position,- smp }
+Store the initial position of the mouse
+
+@code{--request-range,- reqra <X_LIST>}
+Set request range to X_LIST
+
+@code{--reply-range,- repra <X_LIST>}
+Set reply range to X_LIST
+
+@code{--delivered-event-range,- devra <X_LIST>}
+Set delivered event range to X_LIST
+
+@code{--error-range,- erra <X_LIST>}
+Set error range to X_LIST
+
+@code{--extension-request-major-range,- erqmar <X_LIST>}
+Set extension request major range to X_LIST
+
+@code{--extension-request-minor-range,- erqmir <X_LIST>}
+Set extension request minor range to X_LIST
+
+@code{--extension-reply-major-range,- erpmar <X_LIST>}
+Set extension reply major range to X_LIST
+
+@code{--extension-reply-minor-range,- erpmir <X_LIST>}
+Set extension reply minor range to X_LIST
+
+@code{--record-from-data-display,- rfdd }
+Record from data display. This option is experimental.
+
+@code{--record-from-control-display,- rfcd }
+Record from control display. This option is experimental.
+
+@code{--speed-percent,- sp <speed>}
+Set replaying speed percentage is set to speed
+
+@code{--replay-resolution  <res>}
+Resolution to use when replaying is set to res
+
+@code{--resolution-adjustment  }
+Use resolution adjustment
+
+@code{--synchronised-replay  }
+Synchronise during replay
+
+@code{--no-synchronise,- ns }
+Don't use synchornisation during replay
+
+@code{--recall-window-position,- rwp }
+Recall the recorded window position to be used during replay
+
+@code{--force-replay,- fp }
+Keep replaying even if we are out of sync  .... dangerous
+
+@code{--buffer-verbose,- bv }
+Enable verbose printout of replay buffer
+
+@code{--max-threshold,- mat <nr>}
+Set the maximum threshold for sync to nr
+
+@code{--min-threshold,- mit <nr>}
+Set the minimum threshold for sync to tnr
+
+@code{--tot-threshold,- tot <nr>}
+Set the total threshold for sync to nr
+
+@code{--replay-offset,- ro <x,y>}
+Set the replay offset to (x,y)
+
+@code{--max-window-moves,- mwm }
+Maximum times Xnee will try to move a window to the position it was in when recorded
+
+@code{--file,- f <file_name>}
+Read data from file file_name (default is stdin)
+
+@code{--help,- h }
+Print this message
+
+@code{--flags  }
+Prints all flags/options xnee accepts
+
+@code{--project,- pr <file_name>}
+Use project file file_name
+
+@code{--version,- V }
+Print product information
+
+@code{--retype-file  <file>}
+Types (faking user) the contents of the specified file
+
+@code{--write-settings  <file>}
+Writes settings to a resource file
+
+@code{--print-settings,- ps }
+Prints Xnee settings and waits (for <ENTER>)
+
+@code{--print-event-names,- pens }
+Prints X11 event number and name 
+
+@code{--print-event-name,- pen <ev>}
+Prints X11 event number or name coresponding to ev
+
+@code{--print-error-names,- perns }
+Prints X11 error number and name 
+
+@code{--print-error-name,- pern <er>}
+Prints X11 error number or name coresponding to er 
+
+@code{--print-reply-names,- pren }
+Prints X11 reply number and name 
+
+@code{--print-request-names,- prns }
+Prints X11 request number and name 
+
+@code{--print-request-name,- prn <req>}
+Prints X11 request number or name  coresponding to req
+
+@code{--keyboard  }
+Record the keyboard
+
+@code{--mouse  }
+Record mouse events
+
+@code{--print-data-names,- pdn }
+Prints X11 data number and name 
+
+@code{--manpage  }
+Prints Xnee help text in format as used when generating man page
+
+@code{--texipage  }
+Prints Xnee help text in format as used when generating info page
+
+@code{--type-help  }
+Type this help message using faked keys (used to test xnee itself)
+
+@code{--demonstration,- demo }
+Let Xnee take you on a demonstration ride
+
+@code{--check-syntax,- cs }
+Check syntax of the command line and/or project file (no exec)
+
+@code{--replay-backend,- rb }
+<backend>
+
+@code{--force-core-replay,- fcr }
+Discard record X Input device data, use recorded core device data 
+
+@code{--record-replay,- rr }
+Record and replay a session (press q to stop recording)
+
+file_name
+	Name of a file (e.g /tmp/my_file.xns)
+display_name
+	Name of a display (e.g 192.168.1.12:0
+secs
+	Seconds (e.g 10)
+n
+	Integer number (e.g 100)
+LIST
+	Comma separated list of display (e.g 192.168.1.12:0,129.12.23.0:0) 
+X_LIST
+	Comma separated list of integers (e.g 12-23,35,45-56) 
+@node Examples, Bugs, Options, top 
+  cnee --record --events-to-record 1000 --mouse --keyboard -o /tmp/xnee.xns -e /tmp/xnee.log -v
+	Records 1000 events (keyboard and mouse) to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log
+
+  cnee --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log -ns
+	Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log
+
+  For more examples, read the Xnee manual
+
+@node Bugs, See also, Examples,top 
+If you encounter a bug, report it to @indent @ @ @ @email{xnee-bug@@gnu.org}
+@ 
+@indent or go to the Xnee site:
+@indent @ @ @ @url{http://svannah.gnu.org}
+@
+@indent Before reporting the bug, make sure it is not already reported
+@node See also, (dir), Bugs,top 
+There are some other interesting programs out there
+@*
+@*
+Look at xev (1)
+@*
+Also make sure to read the Xnee manual or info page
+@bye

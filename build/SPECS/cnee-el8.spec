@@ -17,11 +17,14 @@ BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  libX11-devel
+BuildRequires:  libX11-static
 BuildRequires:  libXtst-devel
+BuildRequires:  libXtst-static
+BuildRequires:  libXext-devel
+BuildRequires:  libxcb-devel
+BuildRequires:  libXau-devel
+BuildRequires:  libXdmcp-devel
 BuildRequires:  texinfo
-
-Requires:       libX11
-Requires:       libXtst
 
 %description
 GNU Xnee is a suite of programs that can record, replay and distribute
@@ -35,13 +38,29 @@ and automation of X11 input event recording and replaying.
 %setup -q -n %{packname}-%{version}
 
 %build
-make -f Makefile.cvs
+make -f Makefile.cvs generate
 %configure \
     --disable-gui \
     --disable-doc \
     --disable-xinput2
 %make_build
-make man
+make -C cnee/src man
+# Re-link cnee as a fully static binary so it runs on any EL8 system
+# without requiring runtime X11 libraries.
+# (libtool strips -static when linking system libs, so we bypass it here.)
+LIBDIR=$(pkg-config --variable=libdir x11)
+gcc -o cnee/src/cnee \
+    cnee/src/cnee_fake.o cnee/src/cnee_printer.o cnee/src/cnee_strings.o \
+    cnee/src/cnee_demo.o cnee/src/main.o cnee/src/parse.o \
+    -Wl,-Bstatic \
+        libxnee/src/.libs/libxnee.a \
+        "${LIBDIR}/libX11.a" \
+        "${LIBDIR}/libXtst.a" \
+        "${LIBDIR}/libXext.a" \
+        "${LIBDIR}/libxcb.a" \
+        "${LIBDIR}/libXau.a" \
+        "${LIBDIR}/libXdmcp.a" \
+    -Wl,-Bdynamic -lpthread -ldl
 
 %install
 %make_install
@@ -54,7 +73,6 @@ install -m 644 projects/*.xnp %{buildroot}%{_datadir}/xnee/projects/
 %{_bindir}/cnee
 %{_mandir}/man1/cnee.1*
 %{_mandir}/man1/xnee.1*
-%{_infodir}/xnee.info*
 %{_datadir}/xnee/
 %{_datadir}/pixmaps/xnee.xpm
 %{_datadir}/pixmaps/xnee.png

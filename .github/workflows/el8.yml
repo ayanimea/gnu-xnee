@@ -28,20 +28,42 @@ jobs:
             libtool \
             pkgconfig \
             libX11-devel \
+            libX11-static \
             libXtst-devel \
-            libXi-devel \
+            libXtst-static \
+            libXext-devel \
+            libxcb-devel \
+            libXau-devel \
+            libXdmcp-devel \
             texinfo \
             rpm-build \
             git
 
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Build XNee
         run: |
           make -f Makefile.cvs generate
           ./configure --disable-gui --disable-doc --disable-xinput2
           make
+          make -C cnee/src man
+          # Re-link cnee as a fully static binary so it runs on any EL8 system
+          # without requiring runtime X11 libraries.
+          # (libtool strips -static when linking system libs, so we bypass it here.)
+          LIBDIR=$(pkg-config --variable=libdir x11)
+          gcc -o cnee/src/cnee \
+            cnee/src/cnee_fake.o cnee/src/cnee_printer.o cnee/src/cnee_strings.o \
+            cnee/src/cnee_demo.o cnee/src/main.o cnee/src/parse.o \
+            -Wl,-Bstatic \
+              libxnee/src/.libs/libxnee.a \
+              "${LIBDIR}/libX11.a" \
+              "${LIBDIR}/libXtst.a" \
+              "${LIBDIR}/libXext.a" \
+              "${LIBDIR}/libxcb.a" \
+              "${LIBDIR}/libXau.a" \
+              "${LIBDIR}/libXdmcp.a" \
+            -Wl,-Bdynamic -lpthread -ldl
 
       - name: Run e2e tests
         run: |
@@ -49,7 +71,14 @@ jobs:
           ./tests/e2e_cnee.sh ./cnee/src/cnee
 
       - name: Create source distribution
-        run: make dist
+        run: |
+          XNEE_VERSION=$(grep 'AC_INIT' configure.in \
+            | awk 'BEGIN {FS=","} { print $2 }' \
+            | tr -d ' ')
+          # Use git archive to avoid the doc/Makefile.am dia→png generation
+          # that make dist triggers even with --disable-doc.
+          git archive --prefix="Xnee-${XNEE_VERSION}/" HEAD \
+            | gzip > "Xnee-${XNEE_VERSION}.tar.gz"
 
       - name: Build RPM package
         run: |
