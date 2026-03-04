@@ -46,7 +46,7 @@ enum
   {
     XNEE_WINDOW_RECEIVED,
     XNEE_WINDOW_SESSION
-  } xnee_window_types;
+  };
 
 
 int

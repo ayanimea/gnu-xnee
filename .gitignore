@@ -1,0 +1,52 @@
+# Autoconf / Automake generated files
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+autotools/compile
+autotools/config.guess
+autotools/config.sub
+autotools/depcomp
+autotools/install-sh
+autotools/ltmain.sh
+autotools/mdate-sh
+autotools/missing
+autotools/texinfo.tex
+config.h
+config.h.in~
+config.log
+config.status
+configure
+libtool
+stamp-h.in
+stamp-h1
+
+# Build artifacts
+*.o
+*.lo
+*.la
+*.a
+*.so
+*.so.*
+.libs/
+.deps/
+
+# Generated binaries
+cnee/src/cnee
+gnee/src/gnee
+pnee/src/pnee
+
+# Generated documentation
+cnee/src/cnee.1
+cnee/src/cnee.texi
+man/xnee.1
+doc/xnee.info
+doc/xnee.info-*
+
+# Generated data files
+share/xnee.sh
+examples/simple_bash.sh
+
+# Distribution archives
+*.tar.gz
+*.tar.bz2

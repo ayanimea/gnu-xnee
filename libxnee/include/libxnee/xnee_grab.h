@@ -64,7 +64,7 @@ enum
     XNEE_GRAB_KM_PRESS,
     XNEE_GRAB_KM_RELEASE,
     XNEE_GRAB_MOUSE
-  } xnee_grab_modifiers_control ;
+  };
   
 int
 xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode);
