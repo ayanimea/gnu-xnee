@@ -18,11 +18,10 @@ BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  libX11-devel
 BuildRequires:  libXtst-devel
-BuildRequires:  libXi-devel
+BuildRequires:  texinfo
 
 Requires:       libX11
 Requires:       libXtst
-Requires:       libXi
 
 %description
 GNU Xnee is a suite of programs that can record, replay and distribute
@@ -55,8 +54,7 @@ install -m 644 projects/*.xnp %{buildroot}%{_datadir}/xnee/projects/
 %{_bindir}/cnee
 %{_mandir}/man1/cnee.1*
 %{_mandir}/man1/xnee.1*
-%{_libdir}/libxnee.so.*
-%exclude %{_libdir}/libxnee.la
+%{_infodir}/xnee.info*
 %{_datadir}/xnee/
 %{_datadir}/pixmaps/xnee.xpm
 %{_datadir}/pixmaps/xnee.png

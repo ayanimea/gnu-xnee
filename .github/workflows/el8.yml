@@ -30,6 +30,7 @@ jobs:
             libX11-devel \
             libXtst-devel \
             libXi-devel \
+            texinfo \
             rpm-build \
             git
 
