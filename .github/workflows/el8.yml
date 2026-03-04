@@ -1,0 +1,75 @@
+name: Enterprise Linux 8 CI/CD
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build-and-package-el8:
+    name: Build and package on Enterprise Linux 8
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: almalinux:8
+
+    steps:
+      - name: Enable PowerTools and install build dependencies
+        run: |
+          dnf install -y dnf-plugins-core
+          dnf config-manager --set-enabled powertools
+          dnf install -y \
+            gcc \
+            make \
+            autoconf \
+            automake \
+            libtool \
+            pkgconfig \
+            libX11-devel \
+            libXtst-devel \
+            libXi-devel \
+            rpm-build \
+            git
+
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Build XNee
+        run: |
+          make -f Makefile.cvs
+          ./configure --disable-gui --disable-doc --disable-xinput2
+          make
+
+      - name: Create source distribution
+        run: make dist
+
+      - name: Build RPM package
+        run: |
+          XNEE_VERSION=$(grep 'AC_INIT' configure.in \
+            | awk 'BEGIN {FS=","} { print $2 }' \
+            | tr -d ' ')
+          XNEE_RELEASE=1
+
+          mkdir -p "$HOME/rpmbuild"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+
+          cp "Xnee-${XNEE_VERSION}.tar.gz" "$HOME/rpmbuild/SOURCES/"
+
+          sed \
+            -e "s/XNEE_VERSION/${XNEE_VERSION}/g" \
+            -e "s/XNEE_RELEASE/${XNEE_RELEASE}/g" \
+            build/SPECS/cnee-el8.spec \
+            > "$HOME/rpmbuild/SPECS/cnee.spec"
+
+          rpmbuild -ba "$HOME/rpmbuild/SPECS/cnee.spec"
+
+          # Copy built RPMs to the workspace for artifact upload
+          find "$HOME/rpmbuild/RPMS" -name "*.rpm" -exec cp {} . \;
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cnee-el8-rpm
+          path: "*.rpm"
+          if-no-files-found: error
