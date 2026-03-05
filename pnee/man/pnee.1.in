@@ -25,8 +25,8 @@ pnee record, replays or distributes X11 data
 .sp 
 .SH "DESCRIPTION" 
 .B pnee 
-is a Gnome Panel Aplet and should be started as such. GNU Xnee
-consists of a command lie program (cnee), a graphical frontend (gnee)
+is a Gnome Panel Applet and should be started as such. GNU Xnee
+consists of a command line program (cnee), a graphical frontend (gnee)
 and a Gnome Panel Applet (pnee).
 .SH "AUTHOR" 
 Henrik Sandklef.
