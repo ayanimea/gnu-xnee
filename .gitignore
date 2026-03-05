@@ -45,9 +45,15 @@ libxnee/test/testsetget
 # Generated documentation
 cnee/src/cnee.1
 cnee/src/cnee.texi
+cnee/src/cnee.texinfo
+cnee/src/cnee.info
 man/xnee.1
 doc/xnee.info
 doc/xnee.info-*
+
+# Autoconf backup files
+configure~
+config.h.in~
 
 # Generated data files
 share/xnee.sh

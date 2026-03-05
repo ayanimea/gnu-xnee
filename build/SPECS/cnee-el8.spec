@@ -55,6 +55,9 @@ install -m 644 projects/*.xnp %{buildroot}%{_datadir}/xnee/projects/
 %{_mandir}/man1/cnee.1*
 %{_mandir}/man1/xnee.1*
 %{_datadir}/xnee/
+%{_datadir}/pixmaps/xnee.xpm
+%{_datadir}/pixmaps/xnee.png
+%exclude %{_libdir}/libtestcb.*
 
 %changelog
 # end of file

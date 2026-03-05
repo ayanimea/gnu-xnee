@@ -77,8 +77,8 @@ jobs:
 
           rpmbuild -ba "$HOME/rpmbuild/SPECS/cnee.spec"
 
-          # Copy built RPMs to the workspace for artifact upload
-          find "$HOME/rpmbuild/RPMS" -name "*.rpm" -exec cp {} . \;
+          # Copy built binary RPMs and SRPM to the workspace for artifact upload
+          find "$HOME/rpmbuild/RPMS" "$HOME/rpmbuild/SRPMS" -name "*.rpm" -exec cp {} . \;
 
       - name: Upload RPM artifact
         uses: actions/upload-artifact@v4
