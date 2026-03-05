@@ -28,13 +28,7 @@ jobs:
             libtool \
             pkgconfig \
             libX11-devel \
-            libX11-static \
             libXtst-devel \
-            libXtst-static \
-            libXext-devel \
-            libxcb-devel \
-            libXau-devel \
-            libXdmcp-devel \
             texinfo \
             rpm-build \
             git
@@ -48,22 +42,6 @@ jobs:
           ./configure --disable-gui --disable-doc --disable-xinput2
           make
           make -C cnee/src man
-          # Re-link cnee as a fully static binary so it runs on any EL8 system
-          # without requiring runtime X11 libraries.
-          # (libtool strips -static when linking system libs, so we bypass it here.)
-          LIBDIR=$(pkg-config --variable=libdir x11)
-          gcc -o cnee/src/cnee \
-            cnee/src/cnee_fake.o cnee/src/cnee_printer.o cnee/src/cnee_strings.o \
-            cnee/src/cnee_demo.o cnee/src/main.o cnee/src/parse.o \
-            -Wl,-Bstatic \
-              libxnee/src/.libs/libxnee.a \
-              "${LIBDIR}/libX11.a" \
-              "${LIBDIR}/libXtst.a" \
-              "${LIBDIR}/libXext.a" \
-              "${LIBDIR}/libxcb.a" \
-              "${LIBDIR}/libXau.a" \
-              "${LIBDIR}/libXdmcp.a" \
-            -Wl,-Bdynamic -lpthread -ldl
 
       - name: Run e2e tests
         run: |
