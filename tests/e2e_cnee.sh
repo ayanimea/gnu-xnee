@@ -10,6 +10,10 @@
 #   - Replay thresholds: --max-threshold, --min-threshold
 #   - Short option aliases
 #
+# When Xvfb is available the following are also tested end-to-end:
+#   - Record: connects to virtual display, records events, writes session file
+#   - Replay: connects to virtual display, replays a recorded session file
+#
 # Usage:
 #   ./tests/e2e_cnee.sh [path/to/cnee]
 #
@@ -331,6 +335,120 @@ assert_output_contains "cnee -prns = --print-request-names (X_CreateWindow)" "X_
 assert_output_contains "cnee -pdn = --print-data-names (KeyPress)" "KeyPress" "$CNEE" -pdn
 assert_output_contains "cnee -V = --version (xnee)" "xnee" "$CNEE" -V
 assert_output_contains "cnee -h = --help (USAGE)" "USAGE" "$CNEE" -h
+
+##############################################################################
+# Test group 9: Record / Replay with virtual X display (Xvfb)
+##############################################################################
+
+echo ""
+echo "=== Group 9: Record / Replay with virtual X display ==="
+
+XVFB_BIN=$(command -v Xvfb 2>/dev/null)
+if [ -z "$XVFB_BIN" ]; then
+    echo "  [SKIP] Xvfb not found — skipping record/replay live tests"
+    echo "         Install Xvfb (xorg-x11-server-Xvfb on EL8, xvfb on Debian)"
+    echo "         to enable end-to-end record/replay coverage."
+else
+    # Find a free display number by trying :99, :98 … down
+    VDISPLAY=""
+    for _d in 99 98 97 96; do
+        if ! test -S "/tmp/.X${_d}-lock" 2>/dev/null && \
+           ! test -f "/tmp/.X${_d}-lock" 2>/dev/null; then
+            VDISPLAY=":${_d}"
+            break
+        fi
+    done
+
+    if [ -z "$VDISPLAY" ]; then
+        echo "  [SKIP] Could not find a free display number for Xvfb"
+    else
+        # Start a headless virtual X server
+        "$XVFB_BIN" "$VDISPLAY" -screen 0 1024x768x24 >/dev/null 2>&1 &
+        XVFB_PID=$!
+        sleep 1   # give Xvfb time to initialise
+
+        RECORD_FILE="$TMPDIR_E2E/cnee_record.xns"
+        REPLAY_STDERR="$TMPDIR_E2E/replay_stderr.txt"
+
+        # ------------------------------------------------------------------
+        # Record: run cnee --record for 2 seconds; no real user is present so
+        # the session file will contain only the session header (0 events),
+        # but the important thing is that cnee connects, starts the RECORD
+        # extension and exits cleanly.
+        # ------------------------------------------------------------------
+        DISPLAY="$VDISPLAY" "$CNEE" \
+            --record \
+            --keyboard \
+            --mouse \
+            --seconds-to-record 2 \
+            --out-file "$RECORD_FILE" \
+            --display "$VDISPLAY" >/dev/null 2>&1
+        _rec_exit=$?
+
+        if [ "$_rec_exit" -eq 0 ]; then
+            pass "cnee --record exits 0 on virtual display"
+        else
+            fail "cnee --record exits 0 on virtual display" "exit 0" "exit $_rec_exit"
+        fi
+
+        if [ -f "$RECORD_FILE" ]; then
+            pass "cnee --record creates the output session file"
+        else
+            fail "cnee --record creates the output session file" "file exists" "file not found"
+        fi
+
+        if grep -q "Xnee program" "$RECORD_FILE" 2>/dev/null; then
+            pass "recorded session file contains Xnee program header"
+        else
+            fail "recorded session file contains Xnee program header" \
+                "Xnee program in header" "header line missing"
+        fi
+
+        if grep -q "Xnee version" "$RECORD_FILE" 2>/dev/null; then
+            pass "recorded session file contains version information"
+        else
+            fail "recorded session file contains version information" \
+                "Xnee version in header" "version line missing"
+        fi
+
+        if grep -q "[Dd]isplay" "$RECORD_FILE" 2>/dev/null; then
+            pass "recorded session file contains display information"
+        else
+            fail "recorded session file contains display information" \
+                "display info in header" "not found"
+        fi
+
+        # ------------------------------------------------------------------
+        # Replay: replay the just-recorded session file back into the same
+        # virtual display.  Use -ns (no-synchronise) so cnee does not block
+        # waiting for the replayed application to catch up.
+        # ------------------------------------------------------------------
+        DISPLAY="$VDISPLAY" "$CNEE" \
+            --replay \
+            -f "$RECORD_FILE" \
+            --display "$VDISPLAY" \
+            -ns >/dev/null 2>"$REPLAY_STDERR"
+        _rep_exit=$?
+
+        if [ "$_rep_exit" -eq 0 ]; then
+            pass "cnee --replay exits 0 on virtual display"
+        else
+            fail "cnee --replay exits 0 on virtual display" "exit 0" "exit $_rep_exit"
+        fi
+
+        if ! grep -qi \
+                "can't open display\|cannot open display\|unable to open display" \
+                "$REPLAY_STDERR" 2>/dev/null; then
+            pass "cnee --replay connects to virtual display successfully"
+        else
+            fail "cnee --replay connects to virtual display successfully" \
+                "no display error" "$(head -3 "$REPLAY_STDERR")"
+        fi
+
+        kill "$XVFB_PID" 2>/dev/null
+        wait "$XVFB_PID" 2>/dev/null
+    fi
+fi
 
 ##############################################################################
 # Summary

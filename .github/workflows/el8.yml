@@ -32,7 +32,8 @@ jobs:
             libXtst-devel \
             texinfo \
             rpm-build \
-            git
+            git \
+            xorg-x11-server-Xvfb
 
       - name: Checkout source
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
