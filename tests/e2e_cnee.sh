@@ -352,7 +352,7 @@ else
     # Find a free display number by trying :99, :98 … down
     VDISPLAY=""
     for _d in 99 98 97 96; do
-        if ! test -S "/tmp/.X${_d}-lock" 2>/dev/null && \
+        if ! test -S "/tmp/.X11-unix/X${_d}" 2>/dev/null && \
            ! test -f "/tmp/.X${_d}-lock" 2>/dev/null; then
             VDISPLAY=":${_d}"
             break
