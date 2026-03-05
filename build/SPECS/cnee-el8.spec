@@ -16,12 +16,12 @@ BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  pkgconfig
-BuildRequires:  libX11-devel
-BuildRequires:  libXtst-devel
+BuildRequires:  libX11-devel%{?_isa}
+BuildRequires:  libXtst-devel%{?_isa}
 BuildRequires:  texinfo
 
-Requires:       libX11
-Requires:       libXtst
+Requires:       libX11%{?_isa}
+Requires:       libXtst%{?_isa}
 
 %description
 GNU Xnee is a suite of programs that can record, replay and distribute
