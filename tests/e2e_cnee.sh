@@ -34,7 +34,7 @@ fi
 PASS=0
 FAIL=0
 TMPDIR_E2E=$(mktemp -d)
-trap 'rm -rf "$TMPDIR_E2E"; [ -n "$XVFB_PID" ] && kill "$XVFB_PID" 2>/dev/null' EXIT
+trap 'rm -rf "$TMPDIR_E2E" || true; [ -n "$XVFB_PID" ] && kill "$XVFB_PID" 2>/dev/null || true' EXIT
 
 ##############################################################################
 # Helper functions
