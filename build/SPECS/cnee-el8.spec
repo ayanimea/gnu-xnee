@@ -50,7 +50,8 @@ mkdir -p %{buildroot}%{_datadir}/xnee/projects
 install -m 644 projects/*.xnp %{buildroot}%{_datadir}/xnee/projects/
 
 %files
-%doc AUTHORS COPYING ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS
+%license COPYING
+%doc AUTHORS ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS
 %{_bindir}/cnee
 %{_mandir}/man1/cnee.1*
 %{_mandir}/man1/xnee.1*
