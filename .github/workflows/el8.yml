@@ -54,6 +54,10 @@ jobs:
           XNEE_VERSION=$(grep 'AC_INIT' configure.in \
             | awk 'BEGIN {FS=","} { print $2 }' \
             | tr -d ' ')
+          # Inside the AlmaLinux container git runs as root while the checkout
+          # directory is owned by the runner user – mark it safe to allow
+          # git archive to work.
+          git config --global --add safe.directory "$(pwd)"
           # Use git archive to avoid the doc/Makefile.am dia→png generation
           # that make dist triggers even with --disable-doc.
           git archive --prefix="Xnee-${XNEE_VERSION}/" HEAD \

@@ -81,9 +81,9 @@ xnee_init_fifo()
 
 xnee_init_fifo_obsolete()
 {
-    rm -f $MY_FIFO
-    touch $MY_FIFO
-    $CNEE --replay --file $MY_FIFO   &
+    rm -f "$MY_FIFO"
+    touch "$MY_FIFO"
+    "$CNEE" --replay --file "$MY_FIFO"   &
     CNEE_PID=$!
 }
 
@@ -109,9 +109,9 @@ xnee_init_file()
 
 xnee_init_file_obsolete()
 {
-    rm -f $MY_FIFO
-    mkfifo $MY_FIFO
-    (tail -f $MY_FIFO | $CNEE --replay --file stdin) &
+    rm -f "$MY_FIFO"
+    mkfifo "$MY_FIFO"
+    (tail -f "$MY_FIFO" | "$CNEE" --replay --file stdin) &
     CNEE_PID=$!
 }
 
@@ -133,8 +133,8 @@ xnee_init_file_obsolete()
 ########################################################################
 xnee_write()
 {
-#    echo "$*" >> $MY_FIFO
-    echo "$*" | $CNEE --replay --file stdin
+#    echo "$*" >> "$MY_FIFO"
+    echo "$*" | "$CNEE" --replay --file stdin
 }
 
 
