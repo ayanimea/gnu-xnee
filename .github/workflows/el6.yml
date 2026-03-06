@@ -26,34 +26,43 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
+      - name: Write shared CentOS 6 vault repo helper
+        run: |
+          # CentOS 6 reached EOL; vault.centos.org returns 403 on HTTP so HTTPS
+          # is required.  The x86_64 vault repos are correct for both arches:
+          # CentOS 6 multilib ships i686 packages in the same repositories.
+          # Use printf to avoid a nested heredoc that would break YAML parsing.
+          cat > "$RUNNER_TEMP/setup-el6-repos.sh" << 'SETUP'
+          setup_centos6_vault_repos() {
+              printf '%s\n' \
+                  '[base]' \
+                  'name=CentOS-6 - Base' \
+                  'baseurl=https://vault.centos.org/6.10/os/x86_64/' \
+                  'gpgcheck=1' \
+                  'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
+                  '' \
+                  '[updates]' \
+                  'name=CentOS-6 - Updates' \
+                  'baseurl=https://vault.centos.org/6.10/updates/x86_64/' \
+                  'gpgcheck=1' \
+                  'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
+                  '' \
+                  '[extras]' \
+                  'name=CentOS-6 - Extras' \
+                  'baseurl=https://vault.centos.org/6.10/extras/x86_64/' \
+                  'gpgcheck=1' \
+                  'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
+                  > /etc/yum.repos.d/CentOS-Base.repo
+          }
+          SETUP
+
       - name: Build and test inside CentOS 6 container
         run: |
           cat > "$RUNNER_TEMP/build-el6.sh" << 'SCRIPT'
           set -ex
-          # CentOS 6 reached EOL; replace repo config with HTTPS vault mirror URLs.
-          # vault.centos.org returns 403 on HTTP; HTTPS is required.
-          # The x86_64 vault repos are correct for both arches: CentOS 6 multilib
-          # includes i686 packages alongside x86_64 in the same repositories.
-          # Use printf to avoid a nested heredoc (which would break YAML parsing).
-          printf '%s\n' \
-              '[base]' \
-              'name=CentOS-6 - Base' \
-              'baseurl=https://vault.centos.org/6.10/os/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              '' \
-              '[updates]' \
-              'name=CentOS-6 - Updates' \
-              'baseurl=https://vault.centos.org/6.10/updates/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              '' \
-              '[extras]' \
-              'name=CentOS-6 - Extras' \
-              'baseurl=https://vault.centos.org/6.10/extras/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              > /etc/yum.repos.d/CentOS-Base.repo
+          # shellcheck source=/dev/null
+          . /setup-el6-repos.sh
+          setup_centos6_vault_repos
 
           # Install base build dependencies
           yum install -y \
@@ -97,6 +106,7 @@ jobs:
             -e TARGET_ARCH="${{ matrix.arch }}" \
             -v "$PWD:/workspace" \
             -v "$RUNNER_TEMP/build-el6.sh:/build.sh:ro" \
+            -v "$RUNNER_TEMP/setup-el6-repos.sh:/setup-el6-repos.sh:ro" \
             centos:6 bash /build.sh
 
       - name: Create source distribution
@@ -113,26 +123,9 @@ jobs:
         run: |
           cat > "$RUNNER_TEMP/rpm-el6.sh" << 'SCRIPT'
           set -ex
-          # CentOS 6 multilib: i686 packages reside in the same x86_64 vault repo.
-          printf '%s\n' \
-              '[base]' \
-              'name=CentOS-6 - Base' \
-              'baseurl=https://vault.centos.org/6.10/os/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              '' \
-              '[updates]' \
-              'name=CentOS-6 - Updates' \
-              'baseurl=https://vault.centos.org/6.10/updates/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              '' \
-              '[extras]' \
-              'name=CentOS-6 - Extras' \
-              'baseurl=https://vault.centos.org/6.10/extras/x86_64/' \
-              'gpgcheck=1' \
-              'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6' \
-              > /etc/yum.repos.d/CentOS-Base.repo
+          # shellcheck source=/dev/null
+          . /setup-el6-repos.sh
+          setup_centos6_vault_repos
 
           yum install -y \
               gcc make autoconf automake libtool pkgconfig \
@@ -181,6 +174,7 @@ jobs:
             -e TARGET_ARCH="${{ matrix.arch }}" \
             -v "$PWD:/workspace" \
             -v "$RUNNER_TEMP/rpm-el6.sh:/rpm.sh:ro" \
+            -v "$RUNNER_TEMP/setup-el6-repos.sh:/setup-el6-repos.sh:ro" \
             centos:6 bash /rpm.sh
 
       - name: Upload RPM artifact
