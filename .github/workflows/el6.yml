@@ -10,48 +10,41 @@ on:
 jobs:
   build-and-package-el6:
     name: Build and package on Enterprise Linux 6
+    # Run on the Ubuntu host so that actions/checkout (Node 20) works; all
+    # CentOS 6 work is done via explicit `docker run centos:6` invocations
+    # below.  Using `container:` at job level would inject Node 20 into the
+    # CentOS 6 container, which fails because CentOS 6 ships glibc 2.12 and
+    # Node 20 requires glibc ≥ 2.17.
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    container:
-      image: centos:6
 
     steps:
-      - name: Configure CentOS 6 vault repositories
-        run: |
-          # CentOS 6 reached EOL in November 2020; point yum at the vault mirror.
-          sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo
-          sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*.repo
-
-      - name: Install build dependencies
-        run: |
-          yum install -y \
-            gcc \
-            make \
-            autoconf \
-            automake \
-            libtool \
-            pkgconfig \
-            libX11-devel \
-            libXtst-devel \
-            texinfo \
-            rpm-build \
-            git
-
       - name: Checkout source
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Build XNee
+      - name: Build and test inside CentOS 6 container
         run: |
+          cat > "$RUNNER_TEMP/build-el6.sh" << 'SCRIPT'
+          set -ex
+          # CentOS 6 reached EOL in November 2020; point yum at the vault mirror.
+          sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*.repo
+          yum install -y \
+            gcc make autoconf automake libtool pkgconfig \
+            libX11-devel libXtst-devel texinfo rpm-build git
+          cd /workspace
           make -f Makefile.cvs generate
           ./configure --disable-gui --disable-doc --disable-xinput2
           make
           make -C cnee/src man
-
-      - name: Run e2e tests
-        run: |
           chmod +x tests/e2e_cnee.sh
           ./tests/e2e_cnee.sh ./cnee/src/cnee
+          SCRIPT
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -v "$RUNNER_TEMP/build-el6.sh:/build.sh:ro" \
+            centos:6 bash /build.sh
 
       - name: Create source distribution
         run: |
@@ -63,27 +56,35 @@ jobs:
           git archive --prefix="Xnee-${XNEE_VERSION}/" HEAD \
             | gzip > "Xnee-${XNEE_VERSION}.tar.gz"
 
-      - name: Build RPM package
+      - name: Build RPM inside CentOS 6 container
         run: |
+          cat > "$RUNNER_TEMP/rpm-el6.sh" << 'SCRIPT'
+          set -ex
+          sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*.repo
+          yum install -y \
+            gcc make autoconf automake libtool pkgconfig \
+            libX11-devel libXtst-devel texinfo rpm-build
+          cd /workspace
           XNEE_VERSION=$(grep 'AC_INIT' configure.in \
             | awk 'BEGIN {FS=","} { print $2 }' \
             | tr -d ' ')
           XNEE_RELEASE=1
-
           mkdir -p "$HOME/rpmbuild"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-
           cp "Xnee-${XNEE_VERSION}.tar.gz" "$HOME/rpmbuild/SOURCES/"
-
           sed \
             -e "s/XNEE_VERSION/${XNEE_VERSION}/g" \
             -e "s/XNEE_RELEASE/${XNEE_RELEASE}/g" \
             build/SPECS/cnee-el6.spec \
             > "$HOME/rpmbuild/SPECS/cnee.spec"
-
           rpmbuild -ba "$HOME/rpmbuild/SPECS/cnee.spec"
-
-          # Copy built binary RPMs and SRPM to the workspace for artifact upload
-          find "$HOME/rpmbuild/RPMS" "$HOME/rpmbuild/SRPMS" -name "*.rpm" -exec cp {} . \;
+          find "$HOME/rpmbuild/RPMS" "$HOME/rpmbuild/SRPMS" -name "*.rpm" \
+            -exec cp {} /workspace/ \;
+          SCRIPT
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -v "$RUNNER_TEMP/rpm-el6.sh:/rpm.sh:ro" \
+            centos:6 bash /rpm.sh
 
       - name: Upload RPM artifact
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
