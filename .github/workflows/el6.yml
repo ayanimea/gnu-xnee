@@ -1,0 +1,93 @@
+name: Enterprise Linux 6 CI/CD
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  build-and-package-el6:
+    name: Build and package on Enterprise Linux 6
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: centos:6
+
+    steps:
+      - name: Configure CentOS 6 vault repositories
+        run: |
+          # CentOS 6 reached EOL in November 2020; point yum at the vault mirror.
+          sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*.repo
+
+      - name: Install build dependencies
+        run: |
+          yum install -y \
+            gcc \
+            make \
+            autoconf \
+            automake \
+            libtool \
+            pkgconfig \
+            libX11-devel \
+            libXtst-devel \
+            texinfo \
+            rpm-build \
+            git
+
+      - name: Checkout source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Build XNee
+        run: |
+          make -f Makefile.cvs generate
+          ./configure --disable-gui --disable-doc --disable-xinput2
+          make
+          make -C cnee/src man
+
+      - name: Run e2e tests
+        run: |
+          chmod +x tests/e2e_cnee.sh
+          ./tests/e2e_cnee.sh ./cnee/src/cnee
+
+      - name: Create source distribution
+        run: |
+          XNEE_VERSION=$(grep 'AC_INIT' configure.in \
+            | awk 'BEGIN {FS=","} { print $2 }' \
+            | tr -d ' ')
+          # git safe.directory was added in git 2.35.2; ignore errors on older git.
+          git config --global --add safe.directory "$(pwd)" 2>/dev/null || true
+          git archive --prefix="Xnee-${XNEE_VERSION}/" HEAD \
+            | gzip > "Xnee-${XNEE_VERSION}.tar.gz"
+
+      - name: Build RPM package
+        run: |
+          XNEE_VERSION=$(grep 'AC_INIT' configure.in \
+            | awk 'BEGIN {FS=","} { print $2 }' \
+            | tr -d ' ')
+          XNEE_RELEASE=1
+
+          mkdir -p "$HOME/rpmbuild"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+
+          cp "Xnee-${XNEE_VERSION}.tar.gz" "$HOME/rpmbuild/SOURCES/"
+
+          sed \
+            -e "s/XNEE_VERSION/${XNEE_VERSION}/g" \
+            -e "s/XNEE_RELEASE/${XNEE_RELEASE}/g" \
+            build/SPECS/cnee-el6.spec \
+            > "$HOME/rpmbuild/SPECS/cnee.spec"
+
+          rpmbuild -ba "$HOME/rpmbuild/SPECS/cnee.spec"
+
+          # Copy built binary RPMs and SRPM to the workspace for artifact upload
+          find "$HOME/rpmbuild/RPMS" "$HOME/rpmbuild/SRPMS" -name "*.rpm" -exec cp {} . \;
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
+        with:
+          name: cnee-el6-rpm
+          path: "*.rpm"
+          if-no-files-found: error
