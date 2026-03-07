@@ -33,8 +33,7 @@ fi
 
 PASS=0
 FAIL=0
-TMPDIR_E2E=$(mktemp -d)
-if [ -z "$TMPDIR_E2E" ] || [ ! -d "$TMPDIR_E2E" ]; then
+if ! TMPDIR_E2E=$(mktemp -d); then
     echo "ERROR: Failed to create temporary directory for end-to-end tests." >&2
     exit 1
 fi
