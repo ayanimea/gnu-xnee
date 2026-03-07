@@ -9,6 +9,21 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved.  This file is offered as-is,
 without warranty of any kind.
 
+GNU Xnee 4.0
+============
+
+   This is GNU Xnee version 4.0.  GNU Xnee is a suite of programs that
+can record, replay, and distribute user actions under the X11
+environment.  It consists of a library (libxnee), a command-line tool
+(cnee/xnee), and optionally a graphical front-end (gnee).
+
+   For Xnee-specific build options, see the 'README' file.  Commonly
+used configure flags include:
+
+      --disable-gui          do not build the gnee graphical front-end
+      --disable-doc          skip building the documentation
+      --enable-gnome-applet  build the pnee GNOME panel applet
+
 Basic Installation
 ==================
 

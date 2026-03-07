@@ -31,17 +31,17 @@ A Gnome Panel Applet
 To build these three programs do the following:
 ==============================================
 
-Building from dist file (e.g xnee-3.02.tar.gz):
+Building from dist file (e.g xnee-4.0.tar.gz):
 -----------------------------------------------
 
 #Unzip the source file
-gunzip xnee-3.02.tar.gz
+gunzip xnee-4.0.tar.gz
 
 #Untar the source file
-tar xvf xnee-3.02.tar
+tar xvf xnee-4.0.tar
 
 #Enter the Xnee directory
-cd xnee-3.02
+cd xnee-4.0
 
 #Generate the makefiles and build
 ./configure 
