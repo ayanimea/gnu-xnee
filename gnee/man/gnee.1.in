@@ -25,9 +25,9 @@ gnee record, replays or distributes X11 data
 .sp 
 .SH "DESCRIPTION" 
 .B gnee 
-is the grapgical frontend to GNU Xnee. If you want more information
+is the graphical frontend to GNU Xnee. If you want more information
 about GNU Xnee read the GNU Xnee manual and the cnee info pages. GNU
-Xnee consists of a command lie program (cnee), a graphical frontend
+Xnee consists of a command line program (cnee), a graphical frontend
 (gnee) and a Gnome Panel Applet (pnee).
 .SH "AUTHOR" 
 Henrik Sandklef.

@@ -26,7 +26,7 @@ The program suite GNU Xnee can record and replay an X session. GNU Xnee also has
 Xnee gets copies of X protocol data from the X server. These are either printed to file ( record mode) or replayed and synchronised (replay mode). 
 During record and replay cnee can distribute the record/replayed events to multiple displays. 
 .SH "MANUAL"
-.B  For more information, read the GNU Xnee manual ot the xnee info page
+.B  For more information, read the GNU Xnee manual or the xnee info page
 .SH "VERSION"
 Xnee man page, __VERSION_TAG__
 .SH "NOTES"

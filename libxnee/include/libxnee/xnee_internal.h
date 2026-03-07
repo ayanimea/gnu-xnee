@@ -104,7 +104,7 @@ enum _xnee_data_types {
   XNEE_NEW_WINDOW_DATA,
   XNEE_PREDEF_EVENTS,
   XNEE_NO_DATA          
-} xnee_data_types ;
+};
 
 /* ** Do NOT edit ** */
 enum _xnee_mode {
@@ -114,7 +114,7 @@ enum _xnee_mode {
   XNEE_RETYPER      ,        
   XNEE_DISTRIBUTOR  ,        
   XNEE_SYNTAX_CHECKER        
-} xnee_mode ;
+};
 
 
 
@@ -206,7 +206,7 @@ enum xnee_resolution_states
     XNEE_RESOLUTION_UNSET  = -1,
     XNEE_RESOLUTION_USED   =  0,
     XNEE_RESOLUTION_UNUSED =  1
-  } _xnee_resolution_states;
+  };
 
 /* 
  * Grab modes/actions
@@ -222,7 +222,7 @@ enum xnee_grab_modes
     XNEE_GRAB_NODATA = 0,
     XNEE_GRAB_SET    = 1,
     XNEE_GRAB_UNKOWN  = 15
-  } _xnee_grab_modes;
+  };
 
 /*
  *  continue_process commnd enum
@@ -233,7 +233,7 @@ enum cont_proc_commands
     XNEE_PROCESS_INC       ,
     XNEE_PROCESS_DEC       ,
     XNEE_PROCESS_GET
-  } _cont_proc_commands;
+  };
 
 typedef void (*callback_ptr)( XPointer, XRecordInterceptData *); 
 typedef callback_ptr *callback_ptrptr;                                         

@@ -4,7 +4,7 @@ LIBSEMA=${LIBSEMA}
 SUBDIRS = src 
 
 
-EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/* \
+EXTRA_DIST = Makefile.cnee Makefile.cvs \
     test/bin/new_script.sh \
     test/etc/base_funs \
     test/test_all.sh \

@@ -37,7 +37,7 @@
 
 
 #define CNEE_DEMO_DELAYED_START 3
-xnee_option_t *cnee_options ;
+extern xnee_option_t *cnee_options ;
 
 static char *
 cnee_get_default_filename()

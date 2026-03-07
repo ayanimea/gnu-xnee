@@ -102,7 +102,7 @@ enum return_values
     XNEE_REPLAY_BACKEND_FAILURE    ,
     XNEE_OVERRIDE_DISPLAY_FAILURE  ,
     XNEE_LAST_ERROR
-  } _return_values;
+  };
 
 
 
@@ -112,7 +112,7 @@ enum bool_string_values
     XNEE_BOOL_IMPLICIT_TRUE,
     XNEE_BOOL_EXPLICIT_TRUE,
     XNEE_BOOL_ERROR
-  } _bool_string_values;
+  };
 
 enum xnee_protocol_data_numbers
   {
@@ -125,14 +125,14 @@ enum xnee_protocol_data_numbers
     XNEE_PROTO_XINPUT_EVENT_MASTER,
     XNEE_PROTO_XINPUT_EVENT_SLAVE,
     XNEE_PROTO_LAST    
-  } _xnee_protocol_data_numbers;
+  };
   
 enum xnee_replay_backend
   {
     XNEE_REPLAY_XNEE = 0,
     XNEE_REPLAY_SWINPUT,
     XNEE_REPLAY_LAST
-  } _xnee_replay_backend;
+  };
 
 /** 
  * \brief simply a X error. 
@@ -240,7 +240,7 @@ enum
     XNEE_INTERNAL_OPTION,
     XNEE_OBSOLETE_OPTION,
     XNEE_RETYPE_OPTION
-  } xnee_option_type;
+  };
 
 
 enum
@@ -248,7 +248,7 @@ enum
     XNEE_OVERRIDE_DISPLAY_NONE,
     XNEE_OVERRIDE_DISPLAY_DATA,
     XNEE_OVERRIDE_DISPLAY_CONTROL
-  } xnee_override_display;
+  };
 
 typedef struct
 {
