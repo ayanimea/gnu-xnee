@@ -1,4 +1,4 @@
-.\" Copyright Henrik Sandklef 2007
+.\" Copyright Henrik Sandklef 2007, 2026
 .\"   
 .\" This file is part of GNU Xnee.
 .\"
@@ -17,7 +17,7 @@
 .\" Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 .\" Boston, MA 02111-1307, USA.
 .\" 
-.TH "GNEE" 1 2007 "Xnee" 
+.TH "GNEE" 1 2026 "Xnee" 
 .SH "NAME" 
 gnee record, replays or distributes X11 data 
 .SH "SYNOPSIS" 
@@ -34,7 +34,7 @@ Henrik Sandklef.
 .SH "REPORTING BUGS"
 Report bugs in the program to bug-xnee@gnu.org. 
 .SH "COPYRIGHT"
-Copyright (C) 2006, 2007  Henrik Sandklef.
+Copyright (C) 2006, 2007, 2026  Henrik Sandklef.
 This  is  free  software;  see the source for copying conditions. There is NO warranty;not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .SH "SEE ALSO"
 .BR cnee(info), cnee(1), Xnee(info)

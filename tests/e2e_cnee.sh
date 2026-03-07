@@ -70,10 +70,11 @@ assert_exit_zero() {
 assert_output_contains() {
     _desc="$1"; _pat="$2"; shift 2
     _out=$("$@" 2>&1)
-    if echo "$_out" | grep -q "$_pat"; then
+    _ere_pat=$(printf '%s\n' "$_pat" | sed 's/\\|/|/g')
+    if echo "$_out" | grep -Eq "$_ere_pat"; then
         pass "$_desc"
     else
-        fail "$_desc" "output matching '$_pat'" "$(echo "$_out" | head -3)"
+        fail "$_desc" "output matching '$_ere_pat'" "$(echo "$_out" | head -3)"
     fi
 }
 
@@ -293,10 +294,10 @@ SETTINGS_FILE="$TMPDIR_E2E/cnee_settings.xnp"
 assert_exit_zero "cnee --write-settings creates file" \
     "$CNEE" --write-settings "$SETTINGS_FILE"
 
-if [ -f "$SETTINGS_FILE" ]; then
+if [ -s "$SETTINGS_FILE" ]; then
     pass "cnee --write-settings creates a non-empty file"
 else
-    fail "cnee --write-settings creates a non-empty file" "file exists" "file not found"
+    fail "cnee --write-settings creates a non-empty file" "non-empty file exists" "file missing or empty"
 fi
 
 # Write settings with specific values, then read them back
