@@ -6,6 +6,10 @@ Version:        XNEE_VERSION
 Release:        XNEE_RELEASE%{?dist}
 Summary:        X11 event recorder, replayer and distributor (command line tool)
 
+# NOTE: The COPYING file in this package contains the GNU General Public
+# License version 3 (GPLv3). The License tag below reflects the original
+# upstream project packaging convention and has not been updated to GPL-3.0-or-later
+# to avoid unintended changes to distributed package metadata.
 License:        GPL-2.0-or-later
 URL:            https://www.gnu.org/software/xnee
 Source0:        https://ftp.gnu.org/pub/gnu/xnee/%{packname}-%{version}.tar.gz
