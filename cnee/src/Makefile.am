@@ -91,9 +91,9 @@ man: ./$(CNEE)$(EXEEXT)
 	@echo "Generating man page file from: $(CNEE)$(EXEEXT)"
 	./$(CNEE)$(EXEEXT) --manpage > cnee.1
 	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
-	./$(CNEE)$(EXEEXT) --texipage > cnee.texinfo
-	@echo "Generating info file from cnee.texinfo"
-	$(MAKEINFO) cnee.texinfo
+	./$(CNEE)$(EXEEXT) --texipage > cnee.texi
+	@echo "Generating info file from cnee.texi"
+	$(MAKEINFO) cnee.texi
 
 
 cnee.1: $(CNEE)$(EXEEXT)
