@@ -116,8 +116,8 @@ jobs:
             | tr -d ' ')
           # git safe.directory was added in git 2.35.2; ignore errors on older git.
           git config --global --add safe.directory "$(pwd)" 2>/dev/null || true
-          git archive --prefix="Xnee-${XNEE_VERSION}/" HEAD \
-            | gzip > "Xnee-${XNEE_VERSION}.tar.gz"
+          git archive --prefix="xnee-${XNEE_VERSION}/" HEAD \
+            | gzip > "xnee-${XNEE_VERSION}.tar.gz"
 
       - name: Build RPM inside CentOS 6 container
         run: |
@@ -147,7 +147,7 @@ jobs:
               | awk 'BEGIN {FS=","} { print $2 }' | tr -d ' ')
           XNEE_RELEASE=1
           mkdir -p "$HOME/rpmbuild"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-          cp "Xnee-${XNEE_VERSION}.tar.gz" "$HOME/rpmbuild/SOURCES/"
+          cp "xnee-${XNEE_VERSION}.tar.gz" "$HOME/rpmbuild/SOURCES/"
           sed \
               -e "s/XNEE_VERSION/${XNEE_VERSION}/g" \
               -e "s/XNEE_RELEASE/${XNEE_RELEASE}/g" \

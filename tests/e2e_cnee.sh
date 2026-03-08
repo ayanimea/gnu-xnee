@@ -77,7 +77,7 @@ assert_output_contains() {
     if echo "$_out" | grep -Eq "$_ere_pat"; then
         pass "$_desc"
     else
-        fail "$_desc" "output matching '$_ere_pat'" "$(echo "$_out" | head -3)"
+        fail "$_desc" "output matching '$_ere_pat'" "$(echo "$_out" | head -n 3)"
     fi
 }
 
@@ -446,7 +446,7 @@ else
             pass "cnee --replay connects to virtual display successfully"
         else
             fail "cnee --replay connects to virtual display successfully" \
-                "no display error" "$(head -3 "$REPLAY_STDERR")"
+                "no display error" "$(head -n 3 "$REPLAY_STDERR")"
         fi
 
         kill "$XVFB_PID" 2>/dev/null
