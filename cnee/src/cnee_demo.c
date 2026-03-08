@@ -32,12 +32,12 @@
 #include "libxnee/xnee_alloc.h"
 #include "libxnee/xnee_xinput.h"
 
+#include "cnee.h"
 #include "parse.h"
 #include "cnee_strings.h"
 
 
 #define CNEE_DEMO_DELAYED_START 3
-extern xnee_option_t *cnee_options ;
 
 static char *
 cnee_get_default_filename()
