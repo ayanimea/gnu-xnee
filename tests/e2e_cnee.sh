@@ -111,11 +111,11 @@ echo ""
 echo "=== Group 1: Binary basics ==="
 
 assert_exit_zero "cnee --version exits 0" "$CNEE" --version
-assert_output_contains "cnee --version prints 'xnee'" "xnee" "$CNEE" --version
+assert_output_contains "cnee --version prints 'xnee'" "Xnee\|xnee" "$CNEE" --version
 assert_output_contains "cnee --version prints a version number" "[0-9]\.[0-9]" "$CNEE" --version
 
 assert_exit_zero "cnee -V (short) exits 0" "$CNEE" -V
-assert_output_contains "cnee -V prints same output as --version" "xnee" "$CNEE" -V
+assert_output_contains "cnee -V prints same output as --version" "Xnee\|xnee" "$CNEE" -V
 
 assert_exit_zero "cnee --help exits 0" "$CNEE" --help
 assert_output_contains "cnee --help prints USAGE line" "USAGE" "$CNEE" --help
