@@ -32,6 +32,9 @@
 int
 cnee_demonstration (xnee_data *xd);
 
+int
+cnee_record_replay (xnee_data *xd);
+
 
 
 #endif /* CNEE_DEMO_H */

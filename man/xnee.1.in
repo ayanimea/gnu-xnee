@@ -1,4 +1,4 @@
-.\" Copyright Henrik Sandklef 2007
+.\" Copyright Henrik Sandklef 2007, 2026
 .\"   
 .\" This file is part of GNU Xnee.
 .\"
@@ -17,7 +17,7 @@
 .\" Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 .\" Boston, MA 02111-1307, USA.
 .\" 
-.TH "XNEE" 1 2007 "GNU Xnee" 
+.TH "XNEE" 1 2026 "GNU Xnee" 
 .SH "NAME" 
 GNU Xnee records, replays or distributes X11 data 
 .sp 
@@ -26,7 +26,7 @@ The program suite GNU Xnee can record and replay an X session. GNU Xnee also has
 Xnee gets copies of X protocol data from the X server. These are either printed to file ( record mode) or replayed and synchronised (replay mode). 
 During record and replay cnee can distribute the record/replayed events to multiple displays. 
 .SH "MANUAL"
-.B  For more information, read the GNU Xnee manual ot the xnee info page
+.B  For more information, read the GNU Xnee manual or the xnee info page
 .SH "VERSION"
 Xnee man page, __VERSION_TAG__
 .SH "NOTES"

@@ -1,0 +1,5 @@
+# This file is intentionally left as a no-op.
+# Any previous gdoc-specific make variables (gdoc_MANS, gdoc_TEXINFOS, etc.)
+# are intentionally left empty because they are unused and not referenced by the build.
+gdoc_MANS =
+gdoc_TEXINFOS =

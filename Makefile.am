@@ -3,7 +3,7 @@ SUBDIRS = libxnee  cnee gnee pnee ${DOC_DIR} share examples sessions pixmap man
 
 AUTOMAKE_OPTIONS = gnu
 
-EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian README.cvs BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog build/autobuild.sh
+EXTRA_DIST = Makefile.xnee Makefile.cvs projects/test.xnp sessions/example1.xns README README.debian README.cvs BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog build/autobuild.sh
 
 
 
