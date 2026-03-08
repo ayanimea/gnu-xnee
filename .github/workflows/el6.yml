@@ -66,7 +66,7 @@ jobs:
 
           # Install base build dependencies
           yum install -y \
-              gcc make autoconf automake libtool pkgconfig \
+              gcc make autoconf automake libtool pkgconfig perl \
               libX11-devel libXtst-devel texinfo rpm-build git
 
           # 32-bit (i686) extras and compiler wrapper
@@ -128,7 +128,7 @@ jobs:
           setup_centos6_vault_repos
 
           yum install -y \
-              gcc make autoconf automake libtool pkgconfig \
+              gcc make autoconf automake libtool pkgconfig perl \
               libX11-devel libXtst-devel texinfo rpm-build
 
           if [ "$TARGET_ARCH" = "i686" ]; then
