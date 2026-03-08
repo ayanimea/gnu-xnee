@@ -19,6 +19,7 @@ BuildRequires:  pkgconfig
 BuildRequires:  libX11-devel%{?_isa}
 BuildRequires:  libXtst-devel%{?_isa}
 BuildRequires:  texinfo
+BuildRequires:  perl
 
 Requires:       libX11%{?_isa}
 Requires:       libXtst%{?_isa}

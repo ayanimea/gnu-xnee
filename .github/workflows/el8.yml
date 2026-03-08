@@ -28,6 +28,7 @@ jobs:
             automake \
             libtool \
             pkgconfig \
+            perl \
             libX11-devel \
             libXtst-devel \
             texinfo \
